@@ -1,0 +1,205 @@
+<!-- filepath: d:\ITMajor Final\templates\admin_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - User Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #fafbfc; margin: 0; }
+    .sidebar-admin {
+      width: 230px;
+      background-color: #f0f0ff;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-228px);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+      z-index: 10;
+    }
+    .sidebar-admin:hover,
+    .sidebar-admin:focus-within {
+      transform: translateX(0);
+    }
+    .main-content-admin {
+      flex: 1;
+      padding: 2rem 2rem 2rem 2rem;
+      margin-left: 0;
+      transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+    }
+    .sidebar-admin:hover ~ .main-content-admin,
+    .sidebar-admin:focus-within ~ .main-content-admin {
+      margin-left: 230px;
+    }
+    .sidebar-header {
+      border-bottom: 1px solid #eee;
+      padding: 1.2rem 1rem 1rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .sidebar-userimg {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(75,56,255,0.08);
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-link {
+      display: block;
+      padding: 0.75rem 0;
+      color: #4b38ff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 0.4rem;
+      transition: background 0.2s;
+    }
+    .sidebar-link.active, .sidebar-link:hover {
+      background: #e6eaff;
+      color: #2d1fd1;
+    }
+    .sidebar-links-list {
+      flex: 1 1 auto;
+      margin-top: 1.5rem;
+    }
+    .sidebar-userbox {
+      border-top: 1px solid #eee;
+      padding: 1.5rem 1rem 1.5rem 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 50%; object-fit: cover; margin-right: 10px;
+    }
+    .user-row { vertical-align: middle; }
+    .user-actions a, .user-actions button {
+      color: #4b38ff; background: none; border: none; padding: 0 6px; font-size: 1.1em;
+    }
+    .user-actions a:hover, .user-actions button:hover { color: #2d1fd1; }
+    .tab-btn.active { font-weight: 600; color: #4b38ff !important; border-bottom: 2px solid #4b38ff; }
+    .tab-btn { color: #888; background: none; border: none; margin-right: 1.5rem; font-size: 1.05em; }
+    .bulk-btn { min-width: 140px; }
+    .search-bar { max-width: 350px; }
+    .table thead th { font-size: 0.98em; color: #888; }
+    .table tbody td { vertical-align: middle; }
+    .status-active { color: #4b38ff; font-weight: 600; }
+    .status-inactive { color: #aaa; font-weight: 600; }
+    @media (max-width: 900px) {
+      .sidebar-admin {
+        width: 100vw;
+        min-height: auto;
+        position: static;
+        box-shadow: none;
+        transform: translateX(0);
+      }
+      .main-content-admin {
+        padding: 1rem;
+        margin-left: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar-admin d-flex flex-column justify-content-between">
+    <div>
+      <ul class="list-unstyled px-3 sidebar-links-list mt-4">
+        <li><a href="{{ url_for('admin_dashboard') }}" class="sidebar-link active">User Management</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-userbox">
+      <img src="https://i.pravatar.cc/48?u={{ admin.username }}" alt="Admin" class="sidebar-userimg">
+      <div class="fw-bold mt-2">{{ admin.username|capitalize }}</div>
+      <div class="text-muted" style="font-size:0.95em;">Admin</div>
+      <form action="{{ url_for('admin_login') }}" method="POST" class="d-grid gap-2 mt-3 w-100">
+        <button type="submit" class="sidebar-link btn btn-link p-0 w-100 text-center" style="color:#ff4b4b;">Logout</button>
+      </form>
+    </div>
+  </aside>
+  <div class="main-content-admin" id="mainContent">
+    <h4 class="mb-3">All Users</h4>
+    <form method="get" class="mb-3 d-flex align-items-center">
+      <button type="submit" name="role" value="all" class="tab-btn {% if filter_role == 'all' %}active{% endif %}">All</button>
+      <button type="submit" name="role" value="student" class="tab-btn {% if filter_role == 'student' %}active{% endif %}">Students</button>
+      <button type="submit" name="role" value="officer" class="tab-btn {% if filter_role == 'officer' %}active{% endif %}">Officers</button>
+      <input type="text" name="search" class="form-control ms-auto search-bar" placeholder="Enter name or ID" value="{{ search }}">
+      <button type="submit" class="btn btn-outline-secondary ms-2">Search</button>
+    </form>
+    <form method="post">
+      <div class="d-flex gap-2 mb-3">
+        <button type="submit" name="bulk_action" value="reset_passwords" class="btn btn-outline-primary bulk-btn">Reset Passwords</button>
+        <select name="new_role" class="form-select w-auto">
+          <option value="">Change Roles</option>
+          <option value="student">Student</option>
+          <option value="officer">Officer</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button type="submit" name="bulk_action" value="change_roles" class="btn btn-outline-secondary bulk-btn">Change Roles</button>
+      </div>
+      <table class="table align-middle bg-white rounded shadow-sm">
+        <thead>
+          <tr>
+            <th scope="col"><input type="checkbox" id="select-all"></th>
+            <th scope="col">User</th>
+            <th scope="col">Role</th>
+            <th scope="col">Email/USN</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr class="user-row">
+            <td><input type="checkbox" name="selected_users" value="{{ user.id }}"></td>
+            <td>
+              <img src="https://i.pravatar.cc/36?u={{ user.username }}" class="user-avatar" alt="avatar">
+              {{ user.username }}
+            </td>
+            <td>{{ user.role.title() }}</td>
+            <td>{{ user.password }}</td>
+            <td>
+              {% if user.role == 'student' or user.role == 'officer' %}
+                <span class="status-active">Active</span>
+              {% else %}
+                <span class="status-inactive">Inactive</span>
+              {% endif %}
+            </td>
+            <td class="text-end user-actions">
+  <a href="{{ url_for('admin_edit_user', user_id=user.id) }}" title="Edit">
+    <span class="bi bi-pencil"></span>✏️
+  </a>
+  <form action="{{ url_for('admin_delete_user', user_id=user.id) }}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+    <button type="submit" class="btn btn-link p-0" style="color:#ff4b4b;" title="Delete">🗑️</button>
+  </form>
+</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <script>
+    // Select/Deselect all checkboxes
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectAll = document.getElementById('select-all');
+      if (selectAll) {
+        selectAll.addEventListener('change', function() {
+          document.querySelectorAll('input[name="selected_users"]').forEach(cb => cb.checked = selectAll.checked);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

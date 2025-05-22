@@ -1,0 +1,115 @@
+<!-- filepath: d:\ITMajor Final\templates\officer_departments.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Department Officers</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f9f9fb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+    .sidebar {
+      width: 220px;
+      background: #f0f0ff;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-218px);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+      z-index: 10;
+    }
+    .sidebar:hover,
+    .sidebar:focus-within {
+      transform: translateX(0);
+    }
+    .main-content {
+      flex: 1;
+      padding: 2rem 3rem;
+      margin-left: 40px;
+      transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .sidebar:hover ~ .main-content,
+    .sidebar:focus-within ~ .main-content {
+      margin-left: 220px;
+    }
+    .sidebar .section { margin-bottom: 2rem; }
+    .sidebar a { display: block; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #333; text-decoration: none; margin-bottom: 0.25rem; font-weight: 500;}
+    .sidebar a.active, .sidebar a:hover { background-color: #dddfff; color: #4b38ff;}
+    .user-info-container { margin-top: auto; }
+    .user-info { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: #555;}
+    .user-info img { width: 40px; height: 40px; border-radius: 50%; }
+    .logout-btn { background-color: #f44336; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; margin-top: 0.5rem;}
+    .logout-btn:hover { background-color: #d32f2f;}
+    .table { background: #fff; border-radius: 0.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div>
+      <div class="section">
+        <h6>ClearanceApp</h6>
+        <a href="{{ url_for('officer_dashboard') }}">Remarks</a>
+        <a href="{{ url_for('officer_requests') }}">Requests</a>
+        <a href="{{ url_for('officer_departments') }}" class="active">Departments</a>
+        <a href="{{ url_for('officer_notifications') }}">Notifications</a>
+      </div>
+    </div>
+    <div class="user-info-container">
+      <div class="user-info">
+        <img src="https://i.pravatar.cc/40?u={{ session['officer']['username'] }}" alt="User avatar" />
+        <div>
+          <div><strong>{{ session['officer']['username'] }}</strong></div>
+          <div style="font-size: 0.8rem; color: #888;">Department: {{ session['officer']['department'] }}</div>
+        </div>
+      </div>
+      <form action="{{ url_for('officer_logout') }}" method="POST">
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </aside>
+  <main class="main-content">
+    <h2>Departments</h2>
+    <p>Manage all officers in your department.</p>
+    <div class="mb-3">
+      <input type="text" class="form-control" placeholder="Search officer..." oninput="filterTable(this.value)">
+    </div>
+    <strong>Officer List for {{ department }}</strong>
+    <table class="table mt-2">
+      <thead>
+        <tr>
+          <th>Officer Name</th>
+        </tr>
+      </thead>
+      <tbody id="officer-table">
+        {% for officer in officers %}
+        <tr>
+          <td style="display:flex; align-items:center; gap:0.75rem;">
+            <img src="https://i.pravatar.cc/40?u={{ officer }}" alt="Avatar" style="width:40px; height:40px; border-radius:50%;">
+            {{ officer }}
+          </td>
+          <td></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="2" style="text-align:center;color:#aaa;">No officers found in this department.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <script>
+      function filterTable(value) {
+        value = value.toLowerCase();
+        document.querySelectorAll("#officer-table tr").forEach(function(row) {
+          row.style.display = row.textContent.toLowerCase().includes(value) ? "" : "none";
+        });
+      }
+    </script>
+  </main>
+</body>
+</html>

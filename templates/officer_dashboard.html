@@ -1,0 +1,239 @@
+<!-- filepath: d:\ITMajor Final\templates\officer_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9fb;
+      height: 100vh;
+      margin: 0;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #f0f0ff;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-218px);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+      z-index: 10;
+    }
+    .sidebar:hover,
+    .sidebar:focus-within {
+      transform: translateX(0);
+    }
+    .main-content {
+      flex: 1;
+      padding: 2rem 3rem;
+      margin-left: 0;
+      transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+    }
+    .sidebar:hover ~ .main-content,
+    .sidebar:focus-within ~ .main-content {
+      margin-left: 220px;
+    }
+    .sidebar .section {
+      margin-bottom: 2rem;
+    }
+    .sidebar .section h6 {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sidebar a {
+      display: block;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      color: #333;
+      text-decoration: none;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+    .sidebar a.active, .sidebar a:hover {
+      background-color: #dddfff;
+      color: #4b38ff;
+    }
+    .user-info-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .logout-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+    .search-bar {
+      background: #fafafd;
+      border-radius: 0.5rem;
+      border: 1px solid #eee;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    .remarks-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .remarks-table th, .remarks-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: middle;
+    }
+    .remarks-table th {
+      font-weight: 600;
+      color: #333;
+      background: #fff;
+    }
+    .remarks-table tr:last-child td {
+      border-bottom: none;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+    }
+    .btn-edit, .btn-remove {
+      font-size: 0.95rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      background: none;
+      color: #4b38ff;
+      margin-right: 0.5rem;
+    }
+    .btn-edit {
+      border: 1.5px solid #4b38ff;
+      background: #f4f3ff;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-edit:hover {
+      text-decoration: underline;
+      background: #e0deff;
+      border-color: #2d1fd1;
+    }
+    .btn-remove {
+      color: #f44336;
+      margin-right: 0;
+    }
+    .btn-remove:hover {
+      text-decoration: underline;
+      background: #ffeaea;
+    }
+    @media (max-width: 900px) {
+      .main-content { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div>
+      <div class="section">
+        <h6>ClearanceApp</h6>
+        <a href="{{ url_for('officer_dashboard') }}" class="active">Remarks</a>
+        <a href="{{ url_for('officer_requests') }}">Requests</a>
+        <a href="{{ url_for('officer_departments') }}">Departments</a>
+        <a href="{{ url_for('officer_notifications') }}">Notifications</a>
+      </div>
+    </div>
+    <div class="user-info-container">
+      <div class="user-info">
+        <img src="https://i.pravatar.cc/40?u={{ officer['username'] }}" alt="User avatar" />
+        <div>
+          <div><strong>{{ officer['username'] }}</strong></div>
+          <div style="font-size: 0.8rem; color: #888;">Department: {{ officer['department'] }}</div>
+        </div>
+      </div>
+      <form action="{{ url_for('officer_logout') }}" method="POST">
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <h1>Manage Remarks</h1>
+    <p>Edit, update, or remove remarks for students.</p>
+    <form method="GET" class="mb-3">
+      <input type="text" name="search" class="search-bar" placeholder="Enter name or USN" value="{{ request.args.get('search', '') }}">
+    </form>
+    <div>
+      <strong>Remarks List</strong>
+      <table class="remarks-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>USN</th>
+            <th>Status</th>
+            <th>Remarks</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for clearance in clearances %}
+          <tr>
+            <td>
+              <img class="avatar" src="https://i.pravatar.cc/32?u={{ clearance.student.username }}" alt="avatar">
+            </td>
+            <td>{{ clearance.student.username }}</td>
+            <td>{{ clearance.student.password }}</td>
+            <td>{{ clearance.status }}</td>
+            <td>{{ clearance.remarks or '' }}</td>
+            <td>
+              <a href="{{ url_for('edit_remark', student_id=clearance.student.id) }}" class="btn-edit">Edit</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align:center;color:#aaa;">No students found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

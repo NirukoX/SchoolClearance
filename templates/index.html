@@ -1,0 +1,206 @@
+<!-- filepath: d:\ITMajor Final\templates\index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Clearance System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .bg-img {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1500&q=80') no-repeat center 20%/cover;
+      z-index: 0;
+    }
+    .bg-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.45);
+      z-index: 1;
+    }
+    .center-content {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .center-content h1, .center-content p {
+      color: #fff;
+      text-shadow: 0 2px 8px #000;
+    }
+    /* Animated gradient for navbar and buttons */
+    .navbar-gradient {
+      background: linear-gradient(270deg, #4b38ff, #6a82fb, #4b38ff, #6a82fb);
+      background-size: 400% 400%;
+      animation: gradientMove 8s ease infinite;
+    }
+    .btn-gradient {
+      background: linear-gradient(270deg, #4b38ff, #6a82fb, #4b38ff, #6a82fb);
+      background-size: 400% 400%;
+      animation: gradientMove 8s ease infinite;
+      color: #fff !important;
+      border: none;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 8px rgba(75,56,255,0.15);
+    }
+    .btn-gradient:hover, .btn-gradient:focus {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 16px rgba(75,56,255,0.25);
+    }
+    .btn-officer-gradient {
+      background: linear-gradient(270deg, #fff, #ff4b4b, #fff, #ff4b4b);
+      background-size: 400% 400%;
+      animation: gradientMove 8s ease infinite;
+      color: #fff !important;
+      border: none;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 8px rgba(255,75,75,0.15);
+    }
+    .btn-officer-gradient:hover, .btn-officer-gradient:focus {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 16px rgba(255,75,75,0.25);
+      color: #fff !important;
+    }
+    @keyframes gradientMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    /* Floating Help Button */
+    .help-float-btn {
+      position: fixed;
+      right: 32px;
+      bottom: 32px;
+      z-index: 1000;
+      background: #4b38ff;
+      color: #fff !important;
+      border-radius: 2rem;
+      box-shadow: 0 4px 16px rgba(75,56,255,0.18);
+      padding: 0.6rem 1.2rem 0.6rem 0.8rem;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .help-float-btn:hover, .help-float-btn:focus {
+      background: #2d1fd1;
+      color: #fff !important;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(75,56,255,0.28);
+    }
+    .help-float-btn svg {
+      margin-right: 8px;
+      display: block;
+    }
+    .help-float-text {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /* Floating Admin Button */
+    .admin-float-btn {
+      position: fixed;
+      left: 32px;
+      bottom: 32px;
+      z-index: 1000;
+      background: #ff4b4b;
+      color: #fff !important;
+      border-radius: 2rem;
+      box-shadow: 0 4px 16px rgba(255,75,75,0.18);
+      padding: 0.6rem 1.2rem 0.6rem 0.8rem;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .admin-float-btn:hover, .admin-float-btn:focus {
+      background: #d12d1f;
+      color: #fff !important;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(255,75,75,0.28);
+    }
+    .admin-float-btn svg {
+      margin-right: 8px;
+      display: block;
+    }
+    .admin-float-text {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    @media (max-width: 600px) {
+      .help-float-btn {
+        right: 12px;
+        bottom: 12px;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem 0.5rem 0.7rem;
+      }
+      .admin-float-btn {
+        left: 12px;
+        bottom: 12px;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem 0.5rem 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-img"></div>
+  <div class="bg-overlay"></div>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-gradient" style="z-index:3; position:relative;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Clearance System</a>
+      <div class="ms-auto d-flex align-items-center">
+        <a href="/login" class="btn btn-outline-light">Login</a>
+        <a href="/register" class="btn btn-light ms-2">Register</a>
+        <a href="/officer_login" class="btn btn-officer-gradient ms-2">Officer Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="center-content">
+    <h1>Welcome to the School Clearance System</h1>
+    <p class="lead">Track your clearance progress and manage your school records easily and online.</p>
+    <a href="/login" class="btn btn-gradient btn-lg mt-3">Get Started</a>
+  </div>
+
+  <!-- Floating Help Button -->
+  <a href="#" class="help-float-btn" title="Help">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#fff" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="8" fill="#4b38ff"/>
+      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .247-.113.247-.25
+        0-.805.482-1.134 1.07-1.134.635 0 1.07.343 1.07.857
+        0 .364-.165.595-.547.832-.545.326-.876.697-.876 1.318v.07
+        c0 .138.113.25.25.25h.811a.25.25 0 0 0 .25-.25v-.042
+        c0-.451.276-.623.637-.832.545-.326.876-.697.876-1.318
+        0-.964-.857-1.857-2.07-1.857-1.066 0-1.857.672-1.857 1.857zm2.241
+        5.018c0 .345-.28.625-.625.625a.625.625 0 1 1 0-1.25c.345 0 .625.28.625.625z"
+        fill="#fff"/>
+    </svg>
+    <span class="help-float-text">Help</span>
+  </a>
+
+  <!-- Floating Admin Login Button -->
+  <a href="/admin_login" class="admin-float-btn" title="Admin Login">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#fff" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="8" fill="#ff4b4b"/>
+      <path d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+      <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37c.69-1.19 2.065-2.37 5.468-2.37s4.778 1.18 5.468 2.37A7 7 0 0 0 8 1z" fill="#fff"/>
+    </svg>
+    <span class="admin-float-text">Admin Login</span>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
